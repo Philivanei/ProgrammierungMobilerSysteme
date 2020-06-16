@@ -107,7 +107,7 @@ public class PaintView extends View {
     }
 
     public void clear(){
-        canvasBitmap.eraseColor(Color.WHITE);
+        canvasBitmap.eraseColor(Color.TRANSPARENT);
     }
 
 }

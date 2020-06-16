@@ -3,15 +3,19 @@ package de.pms.minigames.main.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import de.pms.minigames.R;
 import de.pms.minigames.main.views.PaintView;
+
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
 public class PaintActivity extends AppCompatActivity {
 
+    int count = 0;
     private PaintView paintView;
     private Button buttonReset, buttonBlack, buttonYellow,
-            buttonRed, buttonGreen, buttonBlue, buttonErase;
+            buttonRed, buttonGreen, buttonBlue, buttonErase, buttonOutline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +30,7 @@ public class PaintActivity extends AppCompatActivity {
         buttonBlue = (Button)  findViewById(R.id.blue);
         buttonGreen = (Button)  findViewById(R.id.green);
         buttonErase = (Button)  findViewById(R.id.erase);
+        buttonOutline = (Button) findViewById(R.id.outline);
 
 
         //adds back button and activity title
@@ -72,6 +77,40 @@ public class PaintActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 paintView.setColor(6);
+            }
+        });
+        buttonOutline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(count > 5){
+                    count = 0;
+                }
+                switch(count){
+                    case 0:
+                        paintView.setBackgroundResource(R.drawable.appleoutline);
+                        count ++;
+                        break;
+                    case 1:
+                        paintView.setBackgroundResource(R.drawable.butterflyoutline);
+                        count ++;
+                        break;
+                    case 2:
+                        paintView.setBackgroundResource(R.drawable.fishoutline);
+                        count ++;
+                        break;
+                    case 3:
+                        paintView.setBackgroundResource(R.drawable.housoutline);
+                        count ++;
+                        break;
+                    case 4:
+                        paintView.setBackgroundResource(R.drawable.staroutline);
+                        count ++;
+                        break;
+                    case 5:
+                        paintView.setBackgroundColor(Color.TRANSPARENT);
+                        count ++;
+                        break;
+                }
             }
         });
 
