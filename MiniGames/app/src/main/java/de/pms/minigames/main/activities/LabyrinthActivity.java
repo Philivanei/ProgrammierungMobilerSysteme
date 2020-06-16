@@ -11,5 +11,10 @@ public class LabyrinthActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_labyrinth);
+
+        //adds back button and activity title
+        getSupportActionBar().setTitle("Labyrinth");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 }
