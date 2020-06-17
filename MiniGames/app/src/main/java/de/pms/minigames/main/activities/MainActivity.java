@@ -8,11 +8,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+/**
+ * The MainActivity can call the other activities
+ */
 public class MainActivity extends AppCompatActivity {
 
     private Button buttonLabyrinth;
     private Button buttonPaint;
 
+    /**
+     * The state of the activity can be saved.
+     * Elements like buttons get initialized.
+     *
+     * @param savedInstanceState saves the state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -11,7 +11,9 @@ import android.view.View;
 import android.graphics.Path;
 import android.widget.Toast;
 
-
+/**
+ * Creates a PaintView to draw something on the screen
+ */
 public class PaintView extends View {
 
     private Paint paintSelected;
@@ -19,6 +21,12 @@ public class PaintView extends View {
     private Canvas canvas;
     private Bitmap canvasBitmap;
 
+    /**
+     * Constructor of the PaintView.
+     * Sets default colour to black.
+     * @param context gives the context to the View
+     * @param attrs gives attributes to the View
+     */
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -26,6 +34,13 @@ public class PaintView extends View {
         paintSelected = createColor(Color.BLACK);
     }
 
+    /**
+     * adapts the size of the screen.
+     * @param w current width
+     * @param h current height
+     * @param oldw old width
+     * @param oldh old height
+     */
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -33,6 +48,10 @@ public class PaintView extends View {
         canvas = new Canvas(canvasBitmap);
     }
 
+    /**
+     * draws something on the canvas.
+     * @param canvas gives the current canvas
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -42,6 +61,11 @@ public class PaintView extends View {
 
     }
 
+    /**
+     * Calculates the coordinates if something gets drawn.
+     * @param motionEvent gives a motion event
+     * @return returns a boolean flag if the user draws something.
+     */
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent){
         float xCoor = motionEvent.getX();
@@ -65,8 +89,11 @@ public class PaintView extends View {
         return true;
     }
 
+    /**
+     * Changes the colour of the brush.
+     * @param colorState saves the colour state. To recognize which colour was selected.
+     */
     public void setColor(int colorState){
-
         switch(colorState){
             case 1:
                 Toast.makeText(getContext(), "schwarz", Toast.LENGTH_SHORT).show();
@@ -95,6 +122,11 @@ public class PaintView extends View {
         }
     }
 
+    /**
+     * Sets a colour to the paint brush.
+     * @param color contains the colour of the new brush.
+     * @return returns the colour as Paint object.
+     */
     private Paint createColor(int color){
         Paint p = new Paint();
         p.setAntiAlias(true);
@@ -106,6 +138,9 @@ public class PaintView extends View {
         return p;
     }
 
+    /**
+     * Resets the View to delete all drawings.
+     */
     public void clear(){
         canvasBitmap.eraseColor(Color.TRANSPARENT);
     }

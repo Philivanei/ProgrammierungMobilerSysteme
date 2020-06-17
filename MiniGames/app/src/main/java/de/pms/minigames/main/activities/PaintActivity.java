@@ -10,13 +10,22 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+/**
+ * The PaintActivity manages the Activities of the paint screen and initializes a PaintView
+ */
 public class PaintActivity extends AppCompatActivity {
 
-    int count = 0;
+    private int count = 0;
     private PaintView paintView;
     private Button buttonReset, buttonBlack, buttonYellow,
             buttonRed, buttonGreen, buttonBlue, buttonErase, buttonOutline;
 
+    /**
+     * The state of the activity can be saved.
+     * Necessary elements like buttons or the PaintView get initialized.
+     *
+     * @param savedInstanceState saves the state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,18 +33,18 @@ public class PaintActivity extends AppCompatActivity {
         setContentView(R.layout.activity_paint);
         paintView = (PaintView) findViewById(R.id.paint_view);
         buttonReset = (Button) findViewById(R.id.button_reset);
-        buttonBlack = (Button)  findViewById(R.id.black);
-        buttonRed = (Button)  findViewById(R.id.red);
-        buttonYellow = (Button)  findViewById(R.id.yellow);
-        buttonBlue = (Button)  findViewById(R.id.blue);
-        buttonGreen = (Button)  findViewById(R.id.green);
-        buttonErase = (Button)  findViewById(R.id.erase);
+        buttonBlack = (Button) findViewById(R.id.black);
+        buttonRed = (Button) findViewById(R.id.red);
+        buttonYellow = (Button) findViewById(R.id.yellow);
+        buttonBlue = (Button) findViewById(R.id.blue);
+        buttonGreen = (Button) findViewById(R.id.green);
+        buttonErase = (Button) findViewById(R.id.erase);
         buttonOutline = (Button) findViewById(R.id.outline);
 
-
         //adds back button and activity title
-        getSupportActionBar().setTitle("Malen");
+        getSupportActionBar().setTitle("Paint");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         buttonReset.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,40 +88,44 @@ public class PaintActivity extends AppCompatActivity {
                 paintView.setColor(6);
             }
         });
+
         buttonOutline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(count > 5){
-                    count = 0;
-                }
-                switch(count){
-                    case 0:
-                        paintView.setBackgroundResource(R.drawable.appleoutline);
-                        count ++;
-                        break;
-                    case 1:
-                        paintView.setBackgroundResource(R.drawable.butterflyoutline);
-                        count ++;
-                        break;
-                    case 2:
-                        paintView.setBackgroundResource(R.drawable.fishoutline);
-                        count ++;
-                        break;
-                    case 3:
-                        paintView.setBackgroundResource(R.drawable.housoutline);
-                        count ++;
-                        break;
-                    case 4:
-                        paintView.setBackgroundResource(R.drawable.staroutline);
-                        count ++;
-                        break;
-                    case 5:
-                        paintView.setBackgroundColor(Color.TRANSPARENT);
-                        count ++;
-                        break;
-                }
+                setDrawable();
             }
         });
 
+    }
+
+    /**
+     * setDrawable can be called by a button click to put outline examples into the background
+     * of the paintView.
+     */
+    private void setDrawable() {
+        if (count > 5) {
+            count = 0;
+        }
+        count++;
+        switch (count) {
+            case 1:
+                paintView.setBackgroundResource(R.drawable.appleoutline);
+                break;
+            case 2:
+                paintView.setBackgroundResource(R.drawable.butterflyoutline);
+                break;
+            case 3:
+                paintView.setBackgroundResource(R.drawable.fishoutline);
+                break;
+            case 4:
+                paintView.setBackgroundResource(R.drawable.housoutline);
+                break;
+            case 5:
+                paintView.setBackgroundResource(R.drawable.staroutline);
+                break;
+            case 6:
+                paintView.setBackgroundColor(Color.WHITE);
+                break;
+        }
     }
 }
