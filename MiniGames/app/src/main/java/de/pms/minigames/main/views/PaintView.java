@@ -32,8 +32,9 @@ public class PaintView extends View {
     /**
      * Constructor of the PaintView.
      * Sets default colour to black.
+     *
      * @param context Gives the context to the View.
-     * @param attrs Gives attributes to the View.
+     * @param attrs   Gives attributes to the View.
      */
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -44,8 +45,9 @@ public class PaintView extends View {
 
     /**
      * Adapts the size of the screen.
-     * @param w Current width
-     * @param h Current height
+     *
+     * @param w    Current width
+     * @param h    Current height
      * @param oldw Old width
      * @param oldh Old height
      */
@@ -61,6 +63,7 @@ public class PaintView extends View {
 
     /**
      * Draws something on the canvas.
+     *
      * @param canvas Gives the current canvas
      */
     @Override
@@ -74,15 +77,16 @@ public class PaintView extends View {
 
     /**
      * Calculates the coordinates if something gets drawn.
+     *
      * @param motionEvent Gives a motion event
      * @return Returns a boolean flag if the user draws something.
      */
     @Override
-    public boolean onTouchEvent(MotionEvent motionEvent){
+    public boolean onTouchEvent(MotionEvent motionEvent) {
         float xCoor = motionEvent.getX();
         float yCoor = motionEvent.getY();
 
-        switch (motionEvent.getAction()){
+        switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 path.moveTo(xCoor, yCoor);
                 return true;
@@ -102,10 +106,11 @@ public class PaintView extends View {
 
     /**
      * Changes the colour of the brush.
+     *
      * @param colorState Saves the colour state. To recognize which colour was selected.
      */
-    public void setColor(int colorState){
-        switch(colorState){
+    public void setColor(int colorState) {
+        switch (colorState) {
             case 1:
                 Toast.makeText(getContext(), "schwarz", Toast.LENGTH_SHORT).show();
                 paintSelected = createColor(Color.BLACK);
@@ -135,18 +140,20 @@ public class PaintView extends View {
 
     /**
      * Gives the current Bitmap.
+     *
      * @return Returns the current Bitmap.
      */
-    public Bitmap saveImage(){
+    public Bitmap saveImage() {
         return canvasBitmap;
     }
 
     /**
      * Sets a colour to the paint brush.
+     *
      * @param color Contains the colour of the new brush.
      * @return Returns the colour as Paint object.
      */
-    private Paint createColor(int color){
+    private Paint createColor(int color) {
         Paint p = new Paint();
         p.setAntiAlias(true);
         p.setStrokeWidth(3f);
@@ -160,28 +167,32 @@ public class PaintView extends View {
     /**
      * Resets the View to delete all drawings.
      */
-    public void clear(){
+    public void clear() {
         canvasBitmap.eraseColor(Color.WHITE);
     }
 
     /**
      * Resets the View and inserts Outline Pictures.
+     *
      * @param res Id of the Outline Picture in resources.
      */
-    public void clear(int res){
+    public void clear(int res) {
         clear();
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inMutable = true;
-        canvasBitmap = BitmapFactory.decodeResource(getResources(), res, options);
-        if(canvasBitmap.getWidth() < screenHeight && canvasBitmap.getHeight() < screenWidth) {
 
-            canvasBitmap.reconfigure(screenWidth,screenHeight,canvasBitmap.getConfig());
-        }
+        canvasBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), res, options), screenWidth, screenHeight, false);
+        //if(canvasBitmap.getWidth() < screenHeight) {
+        //   canvasBitmap.setWidth(screenHeight);
+        //}
+        //if(canvasBitmap.getHeight() < screenWidth){
+        //    canvasBitmap.setHeight(screenWidth);
+        //}
 
         invalidate();
     }
 
     //public void registerActivity(PaintActivity paintActivity) {
-        //this.paintActivity = paintActivity;
+    //this.paintActivity = paintActivity;
     //}
 }
