@@ -1,15 +1,20 @@
 package de.pms.minigames.main.views;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.graphics.Path;
 import android.widget.Toast;
+
+import de.pms.minigames.main.activities.PaintActivity;
 
 /**
  * Creates a PaintView to draw something on the screen
@@ -20,12 +25,15 @@ public class PaintView extends View {
     private Path path;
     private Canvas canvas;
     private Bitmap canvasBitmap;
+    private int screenWidth;
+    private int screenHeight;
+    //private PaintActivity paintActivity;
 
     /**
      * Constructor of the PaintView.
      * Sets default colour to black.
-     * @param context gives the context to the View
-     * @param attrs gives attributes to the View
+     * @param context Gives the context to the View.
+     * @param attrs Gives attributes to the View.
      */
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -35,22 +43,25 @@ public class PaintView extends View {
     }
 
     /**
-     * adapts the size of the screen.
-     * @param w current width
-     * @param h current height
-     * @param oldw old width
-     * @param oldh old height
+     * Adapts the size of the screen.
+     * @param w Current width
+     * @param h Current height
+     * @param oldw Old width
+     * @param oldh Old height
      */
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        screenWidth = w;
+        screenHeight = h;
         canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        canvasBitmap.eraseColor(Color.WHITE);
         canvas = new Canvas(canvasBitmap);
     }
 
     /**
-     * draws something on the canvas.
-     * @param canvas gives the current canvas
+     * Draws something on the canvas.
+     * @param canvas Gives the current canvas
      */
     @Override
     protected void onDraw(Canvas canvas) {
@@ -63,8 +74,8 @@ public class PaintView extends View {
 
     /**
      * Calculates the coordinates if something gets drawn.
-     * @param motionEvent gives a motion event
-     * @return returns a boolean flag if the user draws something.
+     * @param motionEvent Gives a motion event
+     * @return Returns a boolean flag if the user draws something.
      */
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent){
@@ -91,7 +102,7 @@ public class PaintView extends View {
 
     /**
      * Changes the colour of the brush.
-     * @param colorState saves the colour state. To recognize which colour was selected.
+     * @param colorState Saves the colour state. To recognize which colour was selected.
      */
     public void setColor(int colorState){
         switch(colorState){
@@ -123,9 +134,17 @@ public class PaintView extends View {
     }
 
     /**
+     * Gives the current Bitmap.
+     * @return Returns the current Bitmap.
+     */
+    public Bitmap saveImage(){
+        return canvasBitmap;
+    }
+
+    /**
      * Sets a colour to the paint brush.
-     * @param color contains the colour of the new brush.
-     * @return returns the colour as Paint object.
+     * @param color Contains the colour of the new brush.
+     * @return Returns the colour as Paint object.
      */
     private Paint createColor(int color){
         Paint p = new Paint();
@@ -142,7 +161,27 @@ public class PaintView extends View {
      * Resets the View to delete all drawings.
      */
     public void clear(){
-        canvasBitmap.eraseColor(Color.TRANSPARENT);
+        canvasBitmap.eraseColor(Color.WHITE);
     }
 
+    /**
+     * Resets the View and inserts Outline Pictures.
+     * @param res Id of the Outline Picture in resources.
+     */
+    public void clear(int res){
+        clear();
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inMutable = true;
+        canvasBitmap = BitmapFactory.decodeResource(getResources(), res, options);
+        if(canvasBitmap.getWidth() < screenHeight && canvasBitmap.getHeight() < screenWidth) {
+
+            canvasBitmap.reconfigure(screenWidth,screenHeight,canvasBitmap.getConfig());
+        }
+
+        invalidate();
+    }
+
+    //public void registerActivity(PaintActivity paintActivity) {
+        //this.paintActivity = paintActivity;
+    //}
 }

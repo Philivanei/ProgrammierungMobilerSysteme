@@ -2,7 +2,6 @@ package de.pms.minigames.main.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import de.pms.minigames.R;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -20,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
      * The state of the activity can be saved.
      * Elements like buttons get initialized.
      *
-     * @param savedInstanceState saves the state.
+     * @param savedInstanceState Saves the state.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
