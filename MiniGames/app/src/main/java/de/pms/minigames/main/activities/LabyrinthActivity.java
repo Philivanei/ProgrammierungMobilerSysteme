@@ -9,6 +9,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 
+import java.util.Objects;
+
 /**
  * The LabyrinthActivity manages the Activities of the labyrinth screen and initializes a
  * LabyrinthView.
@@ -32,7 +34,7 @@ public class LabyrinthActivity extends AppCompatActivity implements SensorEventL
         labyrinthView = findViewById(R.id.labyrinth_view);
 
         //adds back button and activity title
-        getSupportActionBar().setTitle("Labyrinth");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Labyrinth");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         sensorManager.registerListener(this,

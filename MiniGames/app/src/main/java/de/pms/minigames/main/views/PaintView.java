@@ -1,20 +1,18 @@
 package de.pms.minigames.main.views;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.graphics.Path;
 import android.widget.Toast;
 
-import de.pms.minigames.main.activities.PaintActivity;
 
 /**
  * Creates a PaintView to draw something on the screen
@@ -25,9 +23,9 @@ public class PaintView extends View {
     private Path path;
     private Canvas canvas;
     private Bitmap canvasBitmap;
+    private float strokeWidth;
     private int screenWidth;
     private int screenHeight;
-    //private PaintActivity paintActivity;
 
     /**
      * Constructor of the PaintView.
@@ -40,7 +38,8 @@ public class PaintView extends View {
         super(context, attrs);
 
         path = new Path();
-        paintSelected = createColor(Color.BLACK);
+        strokeWidth = 3f;
+        paintSelected = createColor(Color.BLACK, strokeWidth);
     }
 
     /**
@@ -66,6 +65,7 @@ public class PaintView extends View {
      *
      * @param canvas Gives the current canvas
      */
+    @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -81,6 +81,7 @@ public class PaintView extends View {
      * @param motionEvent Gives a motion event
      * @return Returns a boolean flag if the user draws something.
      */
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
         float xCoor = motionEvent.getX();
@@ -113,27 +114,59 @@ public class PaintView extends View {
         switch (colorState) {
             case 1:
                 Toast.makeText(getContext(), "schwarz", Toast.LENGTH_SHORT).show();
-                paintSelected = createColor(Color.BLACK);
+                paintSelected = createColor(Color.BLACK, strokeWidth);
                 break;
             case 2:
                 Toast.makeText(getContext(), "rot", Toast.LENGTH_SHORT).show();
-                paintSelected = createColor(Color.RED);
+                paintSelected = createColor(Color.RED, strokeWidth);
                 break;
             case 3:
                 Toast.makeText(getContext(), "gelb", Toast.LENGTH_SHORT).show();
-                paintSelected = createColor(Color.YELLOW);
+                paintSelected = createColor(Color.YELLOW, strokeWidth);
                 break;
             case 4:
                 Toast.makeText(getContext(), "blau", Toast.LENGTH_SHORT).show();
-                paintSelected = createColor(Color.BLUE);
+                paintSelected = createColor(Color.BLUE, strokeWidth);
                 break;
             case 5:
                 Toast.makeText(getContext(), "grün", Toast.LENGTH_SHORT).show();
-                paintSelected = createColor(Color.GREEN);
+                paintSelected = createColor(Color.GREEN, strokeWidth);
                 break;
             case 6:
                 Toast.makeText(getContext(), "löschen", Toast.LENGTH_SHORT).show();
-                paintSelected = createColor(Color.WHITE);
+                paintSelected = createColor(Color.WHITE, strokeWidth);
+                break;
+            case 7:
+                Toast.makeText(getContext(), "braun", Toast.LENGTH_SHORT).show();
+                paintSelected = createColor(Color.rgb(139, 90, 43), strokeWidth);
+                break;
+            case 8:
+                Toast.makeText(getContext(), "lila", Toast.LENGTH_SHORT).show();
+                paintSelected = createColor(Color.rgb(136, 0, 255), strokeWidth);
+                break;
+        }
+    }
+
+    /**
+     * Changes the brush size.
+     * @param sizeState Gives state what size to use.
+     */
+    public void setBrushSize(int sizeState){
+        switch(sizeState){
+            case 1:
+                Toast.makeText(getContext(), "klein", Toast.LENGTH_SHORT).show();
+                strokeWidth = 3f;
+                paintSelected = createColor(paintSelected.getColor(), strokeWidth);
+                break;
+            case 2:
+                Toast.makeText(getContext(), "medium", Toast.LENGTH_SHORT).show();
+                strokeWidth = 6f;
+                paintSelected = createColor(paintSelected.getColor(), strokeWidth);
+                break;
+            case 3:
+                Toast.makeText(getContext(), "groß", Toast.LENGTH_SHORT).show();
+                strokeWidth = 10f;
+                paintSelected = createColor(paintSelected.getColor(), strokeWidth);
                 break;
         }
     }
@@ -153,10 +186,10 @@ public class PaintView extends View {
      * @param color Contains the colour of the new brush.
      * @return Returns the colour as Paint object.
      */
-    private Paint createColor(int color) {
+    private Paint createColor(int color, float strokeWidth) {
         Paint p = new Paint();
         p.setAntiAlias(true);
-        p.setStrokeWidth(3f);
+        p.setStrokeWidth(strokeWidth);
         p.setStrokeJoin(Paint.Join.ROUND);
         p.setStyle(Paint.Style.STROKE);
         p.setColor(color);
@@ -182,17 +215,6 @@ public class PaintView extends View {
         options.inMutable = true;
 
         canvasBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), res, options), screenWidth, screenHeight, false);
-        //if(canvasBitmap.getWidth() < screenHeight) {
-        //   canvasBitmap.setWidth(screenHeight);
-        //}
-        //if(canvasBitmap.getHeight() < screenWidth){
-        //    canvasBitmap.setHeight(screenWidth);
-        //}
-
         invalidate();
     }
-
-    //public void registerActivity(PaintActivity paintActivity) {
-    //this.paintActivity = paintActivity;
-    //}
 }

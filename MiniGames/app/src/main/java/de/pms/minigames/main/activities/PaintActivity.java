@@ -7,25 +7,15 @@ import de.pms.minigames.R;
 import de.pms.minigames.main.views.PaintView;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -34,10 +24,11 @@ import java.util.UUID;
  */
 public class PaintActivity extends AppCompatActivity {
 
-    private int count = 0;
+    private int countDrawable = 0;
+    private short countStroke = 0;
     private PaintView paintView;
     private Button buttonReset, buttonBlack, buttonYellow, buttonRed, buttonGreen, buttonBlue,
-            buttonErase, buttonOutline, buttonSave;
+            buttonBrown, buttonPurple, buttonErase, buttonStrokeWidth, buttonOutline, buttonSave;
 
     /**
      * The state of the activity can be saved.
@@ -52,29 +43,25 @@ public class PaintActivity extends AppCompatActivity {
         setContentView(R.layout.activity_paint);
         paintView = (PaintView) findViewById(R.id.paint_view);
 
-        //paintView.registerActivity(this);
-
         buttonReset = (Button) findViewById(R.id.button_reset);
         buttonBlack = (Button) findViewById(R.id.black);
         buttonRed = (Button) findViewById(R.id.red);
         buttonYellow = (Button) findViewById(R.id.yellow);
         buttonBlue = (Button) findViewById(R.id.blue);
         buttonGreen = (Button) findViewById(R.id.green);
+        buttonBrown = (Button) findViewById(R.id.brown);
+        buttonPurple = (Button) findViewById(R.id.purple);
         buttonErase = (Button) findViewById(R.id.erase);
+        //NEEED IMPLEMENTATION!! DONT FORGET CONSTRAINTS IN XML BUTTON TO BUTTON!!
+        buttonStrokeWidth = (Button) findViewById(R.id.strokeWidth);
         buttonOutline = (Button) findViewById(R.id.outline);
         buttonSave = (Button) findViewById(R.id.save_image);
 
         //adds back button and activity title
-        getSupportActionBar().setTitle("Paint");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Paint");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        buttonReset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                paintView.clear();
-            }
-        });
         buttonBlack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,52 +92,66 @@ public class PaintActivity extends AppCompatActivity {
                 paintView.setColor(5);
             }
         });
+        buttonBrown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                paintView.setColor(7);
+            }
+        });
+        buttonPurple.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                paintView.setColor(8);
+            }
+        });
         buttonErase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 paintView.setColor(6);
             }
         });
-
+        buttonStrokeWidth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (countDrawable > 2) {
+                    countDrawable = 0;
+                }
+                countDrawable++;
+                paintView.setBrushSize(countDrawable);
+            }
+        });
+        buttonReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                paintView.clear();
+            }
+        });
         buttonOutline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setDrawable();
             }
         });
-
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (ContextCompat.checkSelfPermission(
-                        getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                        PackageManager.PERMISSION_GRANTED) {
-                    // You can use the API that requires the permission.
-
+                if (ContextCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
                     Bitmap cache = paintView.saveImage();
-                    Toast saveToast = Toast.makeText(getApplicationContext(),
-                            "Image saved to gallery.", Toast.LENGTH_SHORT);
 
-                    String savedImageURL = MediaStore.Images.Media.insertImage(getContentResolver(),cache,UUID.randomUUID().toString() + ".png", "drawing");
-                    System.out.println(savedImageURL);
-
-                    //MediaStore.Images.Media.insertImage(getContentResolver(), cache, "Picture",
-                    //        "Picture");
-                    //MediaStore.Images.Media.insertImage(getContentResolver(),
-                    //        paintView.getDrawingCache(), UUID.randomUUID().toString() + ".png",
-                    //        "drawing");
-                    saveToast.show();
+                    MediaStore.Images.Media.insertImage(getContentResolver(), cache,
+                            UUID.randomUUID().toString() + ".png", "drawing");
+                    Toast.makeText(getApplicationContext(), "Image saved to gallery.",
+                            Toast.LENGTH_SHORT).show();
 
                 } else {
-                    ActivityCompat.requestPermissions(PaintActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                    ActivityCompat.requestPermissions(PaintActivity.this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 }
-
-
             }
         });
-
     }
 
     /**
@@ -158,11 +159,11 @@ public class PaintActivity extends AppCompatActivity {
      * of the paintView.
      */
     private void setDrawable() {
-        if (count > 5) {
-            count = 0;
+        if (countDrawable > 5) {
+            countDrawable = 0;
         }
-        count++;
-        switch (count) {
+        countDrawable++;
+        switch (countDrawable) {
             case 1:
                 paintView.clear(R.drawable.appleoutline);
                 break;
