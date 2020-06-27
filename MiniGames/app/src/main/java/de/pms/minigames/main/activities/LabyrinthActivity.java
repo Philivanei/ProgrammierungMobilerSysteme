@@ -3,11 +3,13 @@ package de.pms.minigames.main.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import de.pms.minigames.R;
 import de.pms.minigames.main.views.LabyrinthView;
+
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.provider.Settings;
 
 import java.util.Objects;
 
@@ -33,6 +35,8 @@ public class LabyrinthActivity extends AppCompatActivity implements SensorEventL
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         labyrinthView = findViewById(R.id.labyrinth_view);
 
+
+        //labyrinthView.hier labyrinth erstellung aufrufen muss bitmap speichern damit canvas gezeichnet wird
         //adds back button and activity title
         Objects.requireNonNull(getSupportActionBar()).setTitle("Labyrinth");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -44,19 +48,21 @@ public class LabyrinthActivity extends AppCompatActivity implements SensorEventL
 
     /**
      * Detects if the accelerometer has changed its values.
+     *
      * @param event Gives the event of the accelerometer.
      */
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             float[] values = event.values;
-            labyrinthView.move((int) -values[0], (int) values[1]);
+            labyrinthView.moveCircle((int) -values[0], (int) values[1]);
         }
     }
 
     /**
      * Detects if the accuracy of the accelerometer has changed.
-     * @param sensor Gives values of the sensor and capabilities.
+     *
+     * @param sensor   Gives values of the sensor and capabilities.
      * @param accuracy Gives the accuracy as an integer value.
      */
     @Override
