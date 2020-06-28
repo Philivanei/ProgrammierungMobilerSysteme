@@ -17,8 +17,8 @@ import de.pms.minigames.main.helper.Cell;
 public class LabyrinthView extends View {
     private Paint paint = new Paint();
     private boolean screenSizeCalled = false;
-    private float xCor;
-    private float yCor;
+    private float xCor, yCor;
+    private int xCount = 0, yCount = 0;
     private int screenWidth;
     private int screenHeight;
     private Cell[][] cells;
@@ -78,27 +78,18 @@ public class LabyrinthView extends View {
      */
     private void createLabyrinth() {
 
-        boolean detect = false;
         cells = new Cell[COLUMNS][ROWS];
 
-        //Creates the amount of cells that are defined with COLUMNS and ROWS
         for (int x = 0; x < COLUMNS; x++) {
             for (int y = 0; y < ROWS; y++) {
+                //Creates the amount of cells that are defined with COLUMNS and ROWS
                 cells[x][y] = new Cell(x, y);
-            }
-        }
-        // Creates the walls with a random boolean -> random wall generating
-        for (int x = 0; x < COLUMNS; x++) {
-            for (int y = 0; y < ROWS; y++) {
+
+                // Creates the walls with a random boolean -> random wall generating
                 Random random = new Random();
                 cells[x][y].setLeft(random.nextBoolean());
                 cells[x][y].setRight(random.nextBoolean());
 
-                if (!detect && (x == y)) {
-                    cells[x][y].setRight(false);
-                    cells[x][y].setLeft(false);
-                    detect = true;
-                }
                 if (x == 0) {
                     cells[x][y].setLeft(true);
                 }
@@ -116,7 +107,6 @@ public class LabyrinthView extends View {
                     cells[x][y].setBottom(false);
                 }
             }
-            detect = false;
         }
     }
 
@@ -128,34 +118,56 @@ public class LabyrinthView extends View {
      * @param dy New value of the y-coordinate.
      */
     public void moveCircle(int dx, int dy) {
-        System.out.println("xwert " + dx);
-        System.out.println("ywert " + dy);
-        if(dx > 0) {
+
+        //rechts
+        if (dx > 0 && !cells[xCount][yCount].getRight()) {
             xCor = (float) (Math.ceil(xCor) + getCellSize());
-            Thread.sleep(1000);
+            xCount++;
+            //Thread.sleep(1000);
         }
-        if(dx < 0) {
+        //links
+        if (dx < 0 && !cells[xCount][yCount].getLeft()) {
             xCor = (float) (Math.ceil(xCor) - getCellSize());
-            Thread.sleep(1000);
+            xCount--;
+            //Thread.sleep(1000);
         }
-        yCor = (float) (Math.ceil(yCor) + dy);
+        //nach unten
+        if (dy > 0 && !cells[xCount][yCount].getBottom()) {
+            yCor = (float) (Math.ceil(yCor) + getCellSize());
+            yCount++;
+            //Thread.sleep(1000);
+        }
+        //nach oben
+        if (dy < 0 && !cells[xCount][yCount].getTop()) {
+            yCor = (float) (Math.ceil(yCor) - getCellSize());
+            yCount--;
+            //Thread.sleep(1000);
+        }
         invalidate();
 
+        //Limits the circle to the bounding of the COLUMNS (max x)
+        //ist noch nötig weil aus irgendwelchen gründen der kreis sich ein bisschen verschiebt
+        //der reset an einer wand hält ihn dann "mittig"
         if (screenSizeCalled) {
-            if (xCor > screenWidth) {
-                xCor = screenWidth;
+            if (xCor > (((COLUMNS - 1) * getCellSize()) + getCellSize() / 2)) {
+                xCor = (((COLUMNS - 1) * getCellSize()) + getCellSize() / 2);
+                xCount = COLUMNS - 1;
             }
         }
         if (xCor < 0) {
-            xCor = 0;
+            xCor = 0 + getCellSize() / 2;
+            xCount = 0;
         }
+        //Limits the circle to the bounding of the ROWS (max y)
         if (screenSizeCalled) {
-            if (yCor > screenHeight) {
-                yCor = screenHeight;
+            if (yCor > (((ROWS - 1) * getCellSize()) + getCellSize() / 2)) {
+                yCor = (((ROWS - 1) * getCellSize()) + getCellSize() / 2);
+                yCount = ROWS - 1;
             }
         }
         if (yCor < 0) {
-            yCor = 0;
+            yCor = 0 + getCellSize() / 2;
+            yCount = 0;
         }
     }
 

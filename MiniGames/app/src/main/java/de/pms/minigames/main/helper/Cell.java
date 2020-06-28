@@ -1,7 +1,7 @@
 package de.pms.minigames.main.helper;
 
 public class Cell {
-    private boolean top = true, bottom = true, left = true, right = true, visited = false;
+    private boolean top = true, bottom = true, left = true, right = true;
     private int column, row;
 
     public Cell(int column, int row) {
