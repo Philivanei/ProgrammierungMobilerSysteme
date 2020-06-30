@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 /**
- * The MainActivity can call the other activities
+ * The MainActivity can call the other activities.
  */
 public class MainActivity extends AppCompatActivity {
 

@@ -9,13 +9,12 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.provider.Settings;
 
 import java.util.Objects;
 
 /**
- * The LabyrinthActivity manages the Activities of the labyrinth screen and initializes a
- * LabyrinthView.
+ * The LabyrinthActivity manages the activities (incl. accelerometer) of the labyrinth-screen and
+ * initializes a LabyrinthView.
  */
 public class LabyrinthActivity extends AppCompatActivity implements SensorEventListener {
     private SensorManager sensorManager;
@@ -23,7 +22,7 @@ public class LabyrinthActivity extends AppCompatActivity implements SensorEventL
 
     /**
      * The state of the activity can be saved.
-     * Necessary elements like the LabyrinthView get initialized.
+     * Necessary elements like the LabyrinthView or the sensor-manager get initialized.
      *
      * @param savedInstanceState Saves the state.
      */
@@ -35,19 +34,17 @@ public class LabyrinthActivity extends AppCompatActivity implements SensorEventL
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         labyrinthView = findViewById(R.id.labyrinth_view);
 
-
-        //labyrinthView.hier labyrinth erstellung aufrufen muss bitmap speichern damit canvas gezeichnet wird
-        //adds back button and activity title
         Objects.requireNonNull(getSupportActionBar()).setTitle("Labyrinth");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         sensorManager.registerListener(this,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                SensorManager.SENSOR_DELAY_FASTEST);
+                SensorManager.SENSOR_DELAY_UI);
     }
 
     /**
-     * Detects if the accelerometer has changed its values.
+     * Detects if the accelerometer has changed its values. Depending on the values the moveCircle
+     * function in LabyrinthView gets called.
      *
      * @param event Gives the event of the accelerometer.
      */

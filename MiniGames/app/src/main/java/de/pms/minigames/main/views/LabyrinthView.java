@@ -6,23 +6,24 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
-
+import android.widget.Toast;
 import java.util.Random;
-
 import de.pms.minigames.main.helper.Cell;
 
 /**
- * Creates a LabyrinthView to show the activity of the accelerometer.
+ * Creates a LabyrinthView to show the activity of the accelerometer and the Labyrinth.
  */
 public class LabyrinthView extends View {
+    private static final long TIME_BETWEEN_UPDATES = 300;
     private Paint paint = new Paint();
-    private boolean screenSizeCalled = false;
+    private Paint goalPaint = new Paint();
+    private boolean screenSizeCalled = false, isGoalReached = false;
     private float xCor, yCor;
     private int xCount = 0, yCount = 0;
-    private int screenWidth;
-    private int screenHeight;
+    private int screenWidth, screenHeight;
     private Cell[][] cells;
     private final int COLUMNS = 5, ROWS = 10;
+    private long lastUpdateOn = System.currentTimeMillis();
 
     /**
      * Constructor of the LabyrinthView.
@@ -33,6 +34,11 @@ public class LabyrinthView extends View {
      */
     public LabyrinthView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        goalPaint.setAntiAlias(true);
+        goalPaint.setStrokeWidth(10f);
+        goalPaint.setColor(Color.RED);
+        goalPaint.setStyle(Paint.Style.STROKE);
+        goalPaint.setStrokeJoin(Paint.Join.ROUND);
         paint.setAntiAlias(true);
         paint.setStrokeWidth(6f);
         paint.setColor(Color.BLACK);
@@ -83,7 +89,7 @@ public class LabyrinthView extends View {
         for (int x = 0; x < COLUMNS; x++) {
             for (int y = 0; y < ROWS; y++) {
                 //Creates the amount of cells that are defined with COLUMNS and ROWS
-                cells[x][y] = new Cell(x, y);
+                cells[x][y] = new Cell();
 
                 // Creates the walls with a random boolean -> random wall generating
                 Random random = new Random();
@@ -111,68 +117,70 @@ public class LabyrinthView extends View {
     }
 
     /**
-     * The function moveCircle changes the circle coordinates. It also limits the circle to the screen
-     * size that the circle-coordinates can't get out of the screen.
+     * The function moveCircle changes the circle coordinates. It also limits the circle to the
+     * screen-size that the circle-coordinates can't get out of the screen. If the circle gets to
+     * the goal a toast will appear.
      *
      * @param dx New value of the x-coordinate.
      * @param dy New value of the y-coordinate.
      */
     public void moveCircle(int dx, int dy) {
+        if (screenSizeCalled && System.currentTimeMillis() - lastUpdateOn > TIME_BETWEEN_UPDATES) {
+            lastUpdateOn = System.currentTimeMillis();
+            if (!isGoalReached) {
+                //One step right
+                if (dx > 0 && !cells[xCount][yCount].getRight()) {
+                    xCor = (float) (Math.ceil(xCor) + getCellSize());
+                    xCount++;
+                }
+                //One step left
+                if (dx < 0 && !cells[xCount][yCount].getLeft()) {
+                    xCor = (float) (Math.ceil(xCor) - getCellSize());
+                    xCount--;
+                }
+                //One step down
+                if (dy > 0 && !cells[xCount][yCount].getBottom()) {
+                    yCor = (float) (Math.ceil(yCor) + getCellSize());
+                    yCount++;
+                }
+                //One step up
+                if (dy < 0 && !cells[xCount][yCount].getTop()) {
+                    yCor = (float) (Math.ceil(yCor) - getCellSize());
+                    yCount--;
+                }
+                invalidate();
 
-        //rechts
-        if (dx > 0 && !cells[xCount][yCount].getRight()) {
-            xCor = (float) (Math.ceil(xCor) + getCellSize());
-            xCount++;
-            //Thread.sleep(1000);
-        }
-        //links
-        if (dx < 0 && !cells[xCount][yCount].getLeft()) {
-            xCor = (float) (Math.ceil(xCor) - getCellSize());
-            xCount--;
-            //Thread.sleep(1000);
-        }
-        //nach unten
-        if (dy > 0 && !cells[xCount][yCount].getBottom()) {
-            yCor = (float) (Math.ceil(yCor) + getCellSize());
-            yCount++;
-            //Thread.sleep(1000);
-        }
-        //nach oben
-        if (dy < 0 && !cells[xCount][yCount].getTop()) {
-            yCor = (float) (Math.ceil(yCor) - getCellSize());
-            yCount--;
-            //Thread.sleep(1000);
-        }
-        invalidate();
+                //Limits the circle to the bounding of the COLUMNS (max x)
+                if (xCor > (((COLUMNS - 1) * getCellSize()) + getCellSize() / 2)) {
+                    xCor = (((COLUMNS - 1) * getCellSize()) + getCellSize() / 2);
+                    xCount = COLUMNS - 1;
 
-        //Limits the circle to the bounding of the COLUMNS (max x)
-        //ist noch nötig weil aus irgendwelchen gründen der kreis sich ein bisschen verschiebt
-        //der reset an einer wand hält ihn dann "mittig"
-        if (screenSizeCalled) {
-            if (xCor > (((COLUMNS - 1) * getCellSize()) + getCellSize() / 2)) {
-                xCor = (((COLUMNS - 1) * getCellSize()) + getCellSize() / 2);
-                xCount = COLUMNS - 1;
+                }
+                if (xCor < 0) {
+                    xCor = getCellSize() / 2;
+                    xCount = 0;
+                }
+                //Limits the circle to the bounding of the ROWS (max y)
+                if (yCor > (((ROWS - 1) * getCellSize()) + getCellSize() / 2)) {
+                    yCor = (((ROWS - 1) * getCellSize()) + getCellSize() / 2);
+                    yCount = ROWS - 1;
+                }
+                if (yCor < 0) {
+                    yCor = getCellSize() / 2;
+                    yCount = 0;
+                }
+
+                //Sets goal to the right bottom
+                if ((xCor == (((COLUMNS - 1) * getCellSize()) + getCellSize() / 2)) && (yCor == (((ROWS - 1) * getCellSize()) + getCellSize() / 2))) {
+                    Toast.makeText(getContext(), "Finished!", Toast.LENGTH_LONG).show();
+                    isGoalReached = true;
+                }
             }
-        }
-        if (xCor < 0) {
-            xCor = 0 + getCellSize() / 2;
-            xCount = 0;
-        }
-        //Limits the circle to the bounding of the ROWS (max y)
-        if (screenSizeCalled) {
-            if (yCor > (((ROWS - 1) * getCellSize()) + getCellSize() / 2)) {
-                yCor = (((ROWS - 1) * getCellSize()) + getCellSize() / 2);
-                yCount = ROWS - 1;
-            }
-        }
-        if (yCor < 0) {
-            yCor = 0 + getCellSize() / 2;
-            yCount = 0;
         }
     }
 
     /**
-     * Gets the current screen size.
+     * Gets the current screen size and sets the start coordinates of the player-circle.
      *
      * @param w    Current screen width.
      * @param h    Current screen height.
@@ -182,7 +190,8 @@ public class LabyrinthView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        screenSizeCalled = true;
+
+        screenSizeCalled = w > 0 && h > 0;
         screenWidth = w;
         screenHeight = h;
         xCor = getCellSize() / 2;
@@ -190,7 +199,7 @@ public class LabyrinthView extends View {
     }
 
     /**
-     * Draws a canvas to the screen.
+     * Draws the player-circle movement, the labyrinth and the finish-circle.
      *
      * @param canvas Canvas of the function.
      */
@@ -221,7 +230,10 @@ public class LabyrinthView extends View {
             }
         }
 
-        //Draws the movement of the circle
+        //Draws the goal
+        canvas.drawCircle((((COLUMNS - 1) * getCellSize()) + getCellSize() / 2),
+                (((ROWS - 1) * getCellSize()) + getCellSize() / 2), getCellSize() / 4, goalPaint);
+        //Draws the movement of the player-circle
         canvas.drawCircle(xCor, yCor, getCellSize() / 3, paint);
     }
 }

@@ -24,8 +24,7 @@ public class PaintView extends View {
     private Canvas canvas;
     private Bitmap canvasBitmap;
     private float strokeWidth;
-    private int screenWidth;
-    private int screenHeight;
+    private int screenWidth, screenHeight;
 
     /**
      * Constructor of the PaintView.
@@ -108,7 +107,7 @@ public class PaintView extends View {
     /**
      * Changes the colour of the brush.
      *
-     * @param colorState Saves the colour state. To recognize which colour was selected.
+     * @param colorState Saves the colour state. To recognize which colour is selected.
      */
     public void setColor(int colorState) {
         switch (colorState) {
@@ -149,10 +148,11 @@ public class PaintView extends View {
 
     /**
      * Changes the brush size.
+     *
      * @param sizeState Gives state what size to use.
      */
-    public void setBrushSize(int sizeState){
-        switch(sizeState){
+    public void setBrushSize(int sizeState) {
+        switch (sizeState) {
             case 1:
                 Toast.makeText(getContext(), "klein", Toast.LENGTH_SHORT).show();
                 strokeWidth = 3f;
@@ -172,9 +172,9 @@ public class PaintView extends View {
     }
 
     /**
-     * Gives the current Bitmap.
+     * Gives the current bitmap.
      *
-     * @return Returns the current Bitmap.
+     * @return Returns the current bitmap.
      */
     public Bitmap saveImage() {
         return canvasBitmap;

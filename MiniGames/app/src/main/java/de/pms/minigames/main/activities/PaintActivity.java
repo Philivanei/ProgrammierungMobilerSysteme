@@ -20,12 +20,11 @@ import java.util.UUID;
 
 
 /**
- * The PaintActivity manages the Activities of the paint screen and initializes a PaintView
+ * The PaintActivity manages the activities of the paint screen and initializes a PaintView.
  */
 public class PaintActivity extends AppCompatActivity {
 
     private int countDrawable = 0;
-    private short countStroke = 0;
     private PaintView paintView;
     private Button buttonReset, buttonBlack, buttonYellow, buttonRed, buttonGreen, buttonBlue,
             buttonBrown, buttonPurple, buttonErase, buttonStrokeWidth, buttonOutline, buttonSave;
@@ -42,7 +41,6 @@ public class PaintActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_paint);
         paintView = (PaintView) findViewById(R.id.paint_view);
-
         buttonReset = (Button) findViewById(R.id.button_reset);
         buttonBlack = (Button) findViewById(R.id.black);
         buttonRed = (Button) findViewById(R.id.red);
@@ -52,15 +50,12 @@ public class PaintActivity extends AppCompatActivity {
         buttonBrown = (Button) findViewById(R.id.brown);
         buttonPurple = (Button) findViewById(R.id.purple);
         buttonErase = (Button) findViewById(R.id.erase);
-        //NEEED IMPLEMENTATION!! DONT FORGET CONSTRAINTS IN XML BUTTON TO BUTTON!!
         buttonStrokeWidth = (Button) findViewById(R.id.strokeWidth);
         buttonOutline = (Button) findViewById(R.id.outline);
         buttonSave = (Button) findViewById(R.id.save_image);
 
-        //adds back button and activity title
         Objects.requireNonNull(getSupportActionBar()).setTitle("Paint");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
         buttonBlack.setOnClickListener(new View.OnClickListener() {
             @Override
