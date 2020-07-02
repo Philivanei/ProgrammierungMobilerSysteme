@@ -37,7 +37,7 @@ public class PaintView extends View {
         super(context, attrs);
 
         path = new Path();
-        strokeWidth = 3f;
+        strokeWidth = 6f;
         paintSelected = createColor(Color.BLACK, strokeWidth);
     }
 
@@ -155,17 +155,17 @@ public class PaintView extends View {
         switch (sizeState) {
             case 1:
                 Toast.makeText(getContext(), "klein", Toast.LENGTH_SHORT).show();
-                strokeWidth = 3f;
+                strokeWidth = 6f;
                 paintSelected = createColor(paintSelected.getColor(), strokeWidth);
                 break;
             case 2:
                 Toast.makeText(getContext(), "medium", Toast.LENGTH_SHORT).show();
-                strokeWidth = 6f;
+                strokeWidth = 10f;
                 paintSelected = createColor(paintSelected.getColor(), strokeWidth);
                 break;
             case 3:
                 Toast.makeText(getContext(), "groß", Toast.LENGTH_SHORT).show();
-                strokeWidth = 10f;
+                strokeWidth = 15f;
                 paintSelected = createColor(paintSelected.getColor(), strokeWidth);
                 break;
         }

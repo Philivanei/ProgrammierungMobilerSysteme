@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Toast;
-import java.util.Random;
+
 import de.pms.minigames.main.helper.Cell;
 
 /**
@@ -15,6 +15,7 @@ import de.pms.minigames.main.helper.Cell;
  */
 public class LabyrinthView extends View {
     private static final long TIME_BETWEEN_UPDATES = 300;
+    private static final float HOLE_PUNCH_PROBABILITY = 0.2f;
     private Paint paint = new Paint();
     private Paint goalPaint = new Paint();
     private boolean screenSizeCalled = false, isGoalReached = false;
@@ -80,21 +81,40 @@ public class LabyrinthView extends View {
     }
 
     /**
+     * Creates a path in case that there is a wall without a hole.
+     */
+    private void makePath() {
+        //-1 because the last row must not have an opening
+        for (int x = 0; x < cells.length - 1; x++) {
+            boolean hasPath = false;
+            for (int y = 0; y < cells[0].length; y++) {
+                hasPath |= !cells[x][y].getRight();
+            }
+            if (!hasPath) {
+                int pathCellY = (int) Math.floor(Math.random() * cells[0].length);
+                cells[x][pathCellY].setRight(false);
+                cells[x + 1][pathCellY].setLeft(false);
+            }
+
+        }
+    }
+
+    /**
      * Creates a labyrinth in 2D array with information of walls
      */
     private void createLabyrinth() {
 
         cells = new Cell[COLUMNS][ROWS];
 
-        for (int x = 0; x < COLUMNS; x++) {
-            for (int y = 0; y < ROWS; y++) {
-                //Creates the amount of cells that are defined with COLUMNS and ROWS
+        for (int x = 0; x < cells.length; x++) {
+            for (int y = 0; y < cells[0].length; y++) {
                 cells[x][y] = new Cell();
+            }
+        }
+        for (int x = 0; x < cells.length; x++) {
+            for (int y = 0; y < cells[0].length; y++) {
 
-                // Creates the walls with a random boolean -> random wall generating
-                Random random = new Random();
-                cells[x][y].setLeft(random.nextBoolean());
-                cells[x][y].setRight(random.nextBoolean());
+                boolean doHolePunch = Math.random() < HOLE_PUNCH_PROBABILITY;
 
                 if (x == 0) {
                     cells[x][y].setLeft(true);
@@ -112,8 +132,18 @@ public class LabyrinthView extends View {
                 } else {
                     cells[x][y].setBottom(false);
                 }
+
+                //We don't want to have holes in the right wall so we make sure the hole-punch
+                // ignores the last one
+                if (doHolePunch && x < cells.length - 1) {
+                    cells[x][y].setRight(false);
+                    cells[x + 1][y].setLeft(false);
+                }
+
             }
         }
+
+        makePath();
     }
 
     /**
@@ -171,7 +201,8 @@ public class LabyrinthView extends View {
                 }
 
                 //Sets goal to the right bottom
-                if ((xCor == (((COLUMNS - 1) * getCellSize()) + getCellSize() / 2)) && (yCor == (((ROWS - 1) * getCellSize()) + getCellSize() / 2))) {
+                if ((xCor == (((COLUMNS - 1) * getCellSize()) + getCellSize() / 2)) &&
+                        (yCor == (((ROWS - 1) * getCellSize()) + getCellSize() / 2))) {
                     Toast.makeText(getContext(), "Finished!", Toast.LENGTH_LONG).show();
                     isGoalReached = true;
                 }
@@ -209,8 +240,8 @@ public class LabyrinthView extends View {
         //Sets the origin to the desired spacing
         canvas.translate(getHorizontalMargin(), getVerticalMargin());
         //Draws the labyrinth
-        for (int x = 0; x < COLUMNS; x++) {
-            for (int y = 0; y < ROWS; y++) {
+        for (int x = 0; x < cells.length; x++) {
+            for (int y = 0; y < cells[0].length; y++) {
                 if (cells[x][y].getTop()) {
                     canvas.drawLine(x * getCellSize(), y * getCellSize(),
                             (x + 1) * getCellSize(), y * getCellSize(), paint);

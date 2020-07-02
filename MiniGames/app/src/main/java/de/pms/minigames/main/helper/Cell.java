@@ -4,12 +4,16 @@ package de.pms.minigames.main.helper;
  * Creates a new cell for the labyrinth.
  */
 public class Cell {
-    private boolean top = true, bottom = true, left = true, right = true;
+    private boolean top, bottom, left, right;
 
     /**
      * Constructor of Cell.
      */
     public Cell() {
+        top = true;
+        bottom = true;
+        left = true;
+        right = true;
     }
 
     /**
