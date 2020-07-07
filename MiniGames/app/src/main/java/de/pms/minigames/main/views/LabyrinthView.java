@@ -11,7 +11,7 @@ import android.widget.Toast;
 import de.pms.minigames.main.helper.Cell;
 
 /**
- * Creates a LabyrinthView to show the activity of the accelerometer and the Labyrinth.
+ * Creates a LabyrinthView to show the activity of the accelerometer (circle) and the labyrinth.
  */
 public class LabyrinthView extends View {
     private static final long TIME_BETWEEN_UPDATES = 300;
@@ -30,8 +30,8 @@ public class LabyrinthView extends View {
      * Constructor of the LabyrinthView.
      * Sets default values to the drawn circle.
      *
-     * @param context Gives the context to the View.
-     * @param attrs   Gives attributes to the View.
+     * @param context Context of the View.
+     * @param attrs   Attributes of the View.
      */
     public LabyrinthView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -50,7 +50,7 @@ public class LabyrinthView extends View {
     }
 
     /**
-     * Returns the size of a cell.
+     * Returns the actual size of a cell.
      *
      * @return Size of the cell.
      */
@@ -100,7 +100,7 @@ public class LabyrinthView extends View {
     }
 
     /**
-     * Creates a labyrinth in 2D array with information of walls
+     * Creates a labyrinth in 2D array with information of walls.
      */
     private void createLabyrinth() {
 
@@ -133,7 +133,7 @@ public class LabyrinthView extends View {
                     cells[x][y].setBottom(false);
                 }
 
-                //We don't want to have holes in the right wall so we make sure the hole-punch
+                // We don't want to have holes in the right wall so we make sure the hole-punch
                 // ignores the last one
                 if (doHolePunch && x < cells.length - 1) {
                     cells[x][y].setRight(false);
@@ -148,8 +148,8 @@ public class LabyrinthView extends View {
 
     /**
      * The function moveCircle changes the circle coordinates. It also limits the circle to the
-     * screen-size that the circle-coordinates can't get out of the screen. If the circle gets to
-     * the goal a toast will appear.
+     * labyrinth-size that the circle-coordinates can't get out of the labyrinth. If the circle gets
+     * to the goal a toast will appear.
      *
      * @param dx New value of the x-coordinate.
      * @param dy New value of the y-coordinate.
@@ -180,7 +180,7 @@ public class LabyrinthView extends View {
                 }
                 invalidate();
 
-                //Limits the circle to the bounding of the COLUMNS (max x)
+                //Limits the circle to the bounding of the COLUMNS
                 if (xCor > (((COLUMNS - 1) * getCellSize()) + getCellSize() / 2)) {
                     xCor = (((COLUMNS - 1) * getCellSize()) + getCellSize() / 2);
                     xCount = COLUMNS - 1;
@@ -190,7 +190,7 @@ public class LabyrinthView extends View {
                     xCor = getCellSize() / 2;
                     xCount = 0;
                 }
-                //Limits the circle to the bounding of the ROWS (max y)
+                //Limits the circle to the bounding of the ROWS
                 if (yCor > (((ROWS - 1) * getCellSize()) + getCellSize() / 2)) {
                     yCor = (((ROWS - 1) * getCellSize()) + getCellSize() / 2);
                     yCount = ROWS - 1;
@@ -211,7 +211,7 @@ public class LabyrinthView extends View {
     }
 
     /**
-     * Gets the current screen size and sets the start coordinates of the player-circle.
+     * Gets the current screen-size and sets the start coordinates of the player-circle.
      *
      * @param w    Current screen width.
      * @param h    Current screen height.
@@ -232,7 +232,7 @@ public class LabyrinthView extends View {
     /**
      * Draws the player-circle movement, the labyrinth and the finish-circle.
      *
-     * @param canvas Canvas of the function.
+     * @param canvas Current canvas of the function.
      */
     @Override
     protected void onDraw(Canvas canvas) {

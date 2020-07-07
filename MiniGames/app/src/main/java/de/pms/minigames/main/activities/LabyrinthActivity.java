@@ -46,7 +46,7 @@ public class LabyrinthActivity extends AppCompatActivity implements SensorEventL
      * Detects if the accelerometer has changed its values. Depending on the values the moveCircle
      * function in LabyrinthView gets called.
      *
-     * @param event Gives the event of the accelerometer.
+     * @param event Event of the accelerometer.
      */
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -59,8 +59,8 @@ public class LabyrinthActivity extends AppCompatActivity implements SensorEventL
     /**
      * Detects if the accuracy of the accelerometer has changed.
      *
-     * @param sensor   Gives values of the sensor and capabilities.
-     * @param accuracy Gives the accuracy as an integer value.
+     * @param sensor   Values of the sensor and capabilities.
+     * @param accuracy The accuracy as an integer value.
      */
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {

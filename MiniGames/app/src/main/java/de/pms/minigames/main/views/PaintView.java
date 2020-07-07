@@ -30,8 +30,8 @@ public class PaintView extends View {
      * Constructor of the PaintView.
      * Sets default colour to black.
      *
-     * @param context Gives the context to the View.
-     * @param attrs   Gives attributes to the View.
+     * @param context Context of the view.
+     * @param attrs   Attributes of the view.
      */
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -44,10 +44,10 @@ public class PaintView extends View {
     /**
      * Adapts the size of the screen.
      *
-     * @param w    Current width
-     * @param h    Current height
-     * @param oldw Old width
-     * @param oldh Old height
+     * @param w    Current width.
+     * @param h    Current height.
+     * @param oldw Old width.
+     * @param oldh Old height.
      */
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -62,7 +62,7 @@ public class PaintView extends View {
     /**
      * Draws something on the canvas.
      *
-     * @param canvas Gives the current canvas
+     * @param canvas Current canvas.
      */
     @SuppressLint("DrawAllocation")
     @Override
@@ -77,7 +77,7 @@ public class PaintView extends View {
     /**
      * Calculates the coordinates if something gets drawn.
      *
-     * @param motionEvent Gives a motion event
+     * @param motionEvent Motion event of the view.
      * @return Returns a boolean flag if the user draws something.
      */
     @SuppressLint("ClickableViewAccessibility")
@@ -107,7 +107,7 @@ public class PaintView extends View {
     /**
      * Changes the colour of the brush.
      *
-     * @param colorState Saves the colour state. To recognize which colour is selected.
+     * @param colorState Saves the colour state to recognize which colour is selected.
      */
     public void setColor(int colorState) {
         switch (colorState) {
@@ -214,7 +214,8 @@ public class PaintView extends View {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inMutable = true;
 
-        canvasBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), res, options), screenWidth, screenHeight, false);
+        canvasBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), res,
+                options), screenWidth, screenHeight, false);
         invalidate();
     }
 }
