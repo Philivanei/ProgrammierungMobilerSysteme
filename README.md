@@ -1,2 +1,2 @@
 # ProgrammierungMobilerSysteme
-Dieses Repository zeigt die prototypische Entwicklung einer kleinen mobilen Applikation, die als Projektarbeit des Moduls Programmierung mobiler Systeme (PMS) dient.
+This repository shows the prototypical development of a little mobile application, that serves as study research project of the module "Programmierung mobiler Systeme (PMS)".
